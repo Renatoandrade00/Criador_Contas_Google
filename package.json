@@ -1,0 +1,30 @@
+{
+  "name": "google-account-automator",
+  "version": "1.0.0",
+  "description": "Sistema automatizado para criação em lote de contas Google com painel web e evasão de detecção",
+  "main": "src/server/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server/app.js",
+    "dev": "node --watch src/server/app.js"
+  },
+  "keywords": [
+    "google",
+    "account-creator",
+    "automation",
+    "puppeteer",
+    "stealth"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "puppeteer": "^23.11.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "ws": "^8.18.0"
+  }
+}

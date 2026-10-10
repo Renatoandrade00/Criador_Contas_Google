@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Account Automator - Painel de Controle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-theme">
+    <div class="app-layout">
+        <!-- Barra Superior / Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>Google Account Automator</h1>
+                    <p class="subtitle">Orquestrador Inteligente de Contas & Evasão de Detecção</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="status-badge" id="systemStatusBadge">
+                    <span class="status-dot"></span>
+                    <span id="systemStatusText">Pronto</span>
+                </div>
+                <div class="ws-indicator" id="wsIndicator" title="Conexão com servidor em tempo real">
+                    <span class="indicator-dot connected"></span> Online
+                </div>
+            </div>
+        </header>
+
+        <!-- Grid Principal -->
+        <main class="main-container">
+            <!-- Coluna da Esquerda: Configuração e Insumos -->
+            <section class="config-panel card">
+                <div class="card-header">
+                    <h2>Configuração do Lote</h2>
+                    <span class="badge">Parâmetros</span>
+                </div>
+
+                <form id="batchConfigForm">
+                    <!-- Volume e Concorrência -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="totalAccounts">Volume de Contas</label>
+                            <input type="number" id="totalAccounts" name="totalAccounts" min="1" max="1000" value="10" required>
+                            <small>Meta de criação para este lote</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="concurrency">Concorrência (Threads)</label>
+                            <select id="concurrency" name="concurrency">
+                                <option value="1">1 Instância (Mais Leve)</option>
+                                <option value="2" selected>2 Instâncias (Recomendado)</option>
+                                <option value="3">3 Instâncias</option>
+                                <option value="4">4 Instâncias</option>
+                                <option value="5">5 Instâncias (Máximo)</option>
+                            </select>
+                            <small>Sessões paralelas simultâneas</small>
+                        </div>
+                    </div>
+
+                    <!-- Modo de Execução -->
+                    <div class="form-group">
+                        <label>Modo de Operação</label>
+                        <div class="mode-selector">
+                            <label class="mode-card active" id="modeCardConservative">
+                                <input type="radio" name="executionMode" value="CONSERVATIVE" checked>
+                                <div class="mode-info">
+                                    <strong>Modo Conservador</strong>
+                                    <p>Delays longos, curvas de Bézier, autocorreção e aquecimento de sessão para máxima evasão.</p>
+                                </div>
+                            </label>
+                            <label class="mode-card" id="modeCardAggressive">
+                                <input type="radio" name="executionMode" value="AGGRESSIVE">
+                                <div class="mode-info">
+                                    <strong>Modo Agressivo</strong>
+                                    <p>Delays reduzidos (300-800ms) para maior velocidade de processamento por minuto.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Insumos: Provedor SMS -->
+                    <div class="form-group">
+                        <label for="smsProvider">Provedor de SMS Virtual</label>
+                        <select id="smsProvider" name="smsProvider">
+                            <option value="HERO_SMS" selected>Hero SMS (hero-sms.com - Sucessor SMS-Activate)</option>
+                            <option value="SMSPOOL">SMSPool (smspool.net - Chips Físicos Non-VoIP)</option>
+                            <option value="FIVESIM">5SIM (5sim.net - Alta Estabilidade)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group flex-2">
+                            <label for="smsApiKey">Chave de API do Provedor de SMS</label>
+                            <input type="password" id="smsApiKey" name="smsApiKey" placeholder="Insira sua API Key do serviço de SMS" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="smsCountry">País (Código ou Nome)</label>
+                            <input type="text" id="smsCountry" name="smsCountry" list="countrySuggestions" value="6" placeholder="Ex: 6">
+                            <datalist id="countrySuggestions">
+                                <option value="6">6 - Indonésia (Recomendado - $0.03 / 1M+ números)</option>
+                                <option value="4">4 - Filipinas (Mais Barato - $0.02 / 780k números)</option>
+                                <option value="16">16 - Inglaterra / Reino Unido ($0.055)</option>
+                                <option value="7">7 - Malásia ($0.05)</option>
+                                <option value="8">8 - Quênia ($0.02)</option>
+                                <option value="73">73 - Brasil</option>
+                                <option value="12">12 - Estados Unidos (EUA)</option>
+                                <option value="0">0 - Qualquer / Aleatório</option>
+                            </datalist>
+                            <small>Padrão: 6 (Indonésia). Você pode digitar qualquer outro código.</small>
+                        </div>
+                    </div>
+
+                    <!-- Insumos: Lista de Proxies -->
+                    <div class="form-group">
+                        <div class="label-with-action">
+                            <label for="proxies">Lista de Proxies (Opcional, 1 por linha)</label>
+                            <button type="button" class="btn-link" id="btnTestFirstProxy">Testar 1º Proxy</button>
+                        </div>
+                        <textarea id="proxies" name="proxies" rows="4" placeholder="Exemplos:&#10;192.168.1.100:8080&#10;192.168.1.100:8080:usuario:senha"></textarea>
+                        <small>Rotação automática por sessão</small>
+                    </div>
+
+                    <!-- Botões de Ação do Lote -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="btnStartBatch">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Iniciar Criação
+                        </button>
+                        <button type="button" class="btn btn-warning" id="btnPauseBatch" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                            Pausar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="btnStopBatch" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg>
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Coluna da Direita: Métricas em Tempo Real e Console -->
+            <section class="dashboard-panel">
+                <!-- Cards de Estatísticas -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-title">Contas Criadas</div>
+                        <div class="metric-value success" id="valCreated">0</div>
+                        <div class="metric-subtitle">Salvas em arquivo</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Falhas / Rejeições</div>
+                        <div class="metric-value danger" id="valFailed">0</div>
+                        <div class="metric-subtitle">Tentativas interrompidas</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Taxa de Sucesso</div>
+                        <div class="metric-value highlight" id="valSuccessRate">0%</div>
+                        <div class="metric-subtitle">Alvo do PRD: &ge; 70%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Threads Ativas</div>
+                        <div class="metric-value" id="valActiveWorkers">0</div>
+                        <div class="metric-subtitle">Navegadores em execução</div>
+                    </div>
+                </div>
+
+                <!-- Barra de Progresso Global -->
+                <div class="progress-section card">
+                    <div class="progress-info">
+                        <span>Progresso do Lote</span>
+                        <span id="progressText">0 / 0 (0%)</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Console de Logs em Tempo Real -->
+                <div class="console-card card">
+                    <div class="card-header">
+                        <div class="console-title">
+                            <span class="terminal-dot red"></span>
+                            <span class="terminal-dot yellow"></span>
+                            <span class="terminal-dot green"></span>
+                            <h3>Live Execution Logs</h3>
+                        </div>
+                        <div class="console-actions">
+                            <button type="button" class="btn btn-sm" id="btnClearLogs">Limpar</button>
+                            <button type="button" class="btn btn-sm btn-outline" id="btnDownloadTxt">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                                Baixar .TXT
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline" id="btnDownloadMd">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                                Baixar .MD
+                            </button>
+                        </div>
+                    </div>
+                    <div class="terminal-window" id="terminalLogs">
+                        <div class="log-line info">
+                            <span class="log-time">[00:00:00]</span>
+                            <span class="log-badge info">INFO</span>
+                            <span class="log-msg">Painel inicializado. Aguardando configuração para início de lote.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
